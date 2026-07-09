@@ -1,8 +1,25 @@
-# Restaurant Management PWA
+# Restaurant Management PWA v2
 
-A GitHub Pages + Supabase Free + Supabase Auth restaurant/business management PWA.
+Updated GitHub Pages + Supabase app with:
 
-## Files
+- Flipkart-style orange/purple mobile UI
+- Fast menu-based Sales module
+- Expense purchase entry
+- Automatic Inventory update from Expenses
+- SOP/Recipe costing
+- Recipe preparation inventory adjustment
+- Dashboard profit calculations
+- Reports
+- Admin/staff role UI handling
+
+## Important setup
+
+Before uploading the new app files, run `supabase-migration-v2.sql` in Supabase SQL Editor.
+
+## Upload to GitHub Pages
+
+Upload these files to your existing repository root:
+
 - index.html
 - style.css
 - app.js
@@ -11,5 +28,4 @@ A GitHub Pages + Supabase Free + Supabase Auth restaurant/business management PW
 - icon-192.png
 - icon-512.png
 
-## Setup
-Upload all files to a GitHub repository, then enable GitHub Pages from Settings > Pages.
+Do not delete your Supabase data.
