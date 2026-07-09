@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Restaurant Manager</title>
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Business Dashboard</p>
+        <h1>Restaurant Manager</h1>
+      </div>
+      <button id="logoutBtn" class="ghost hidden">Logout</button>
+    </header>
+
+    <main>
+      <section id="authView" class="auth-card">
+        <h2>Login</h2>
+        <p class="muted">Use your Supabase Auth email and password.</p>
+
+        <label>Email</label>
+        <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+
+        <label>Password</label>
+        <input id="password" type="password" placeholder="Minimum 6 characters" autocomplete="current-password" />
+
+        <div class="button-row">
+          <button id="loginBtn">Login</button>
+          <button id="signupBtn" class="secondary">Create Account</button>
+        </div>
+
+        <p id="authMessage" class="message"></p>
+      </section>
+
+      <section id="appView" class="hidden">
+        <nav class="tabs">
+          <button data-tab="dashboard" class="active">Dashboard</button>
+          <button data-tab="sales">Sales</button>
+          <button data-tab="expenses">Expenses</button>
+          <button data-tab="inventory">Inventory</button>
+          <button data-tab="reports">Reports</button>
+        </nav>
+
+        <section id="dashboard" class="tab-panel active">
+          <div class="grid cards">
+            <article class="stat-card">
+              <span>Today Sales</span>
+              <strong id="todaySales">₹0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Today Expenses</span>
+              <strong id="todayExpenses">₹0</strong>
+            </article>
+            <article class="stat-card profit">
+              <span>Today Profit</span>
+              <strong id="todayProfit">₹0</strong>
+            </article>
+            <article class="stat-card alert">
+              <span>Low Stock Items</span>
+              <strong id="lowStockCount">0</strong>
+            </article>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title">
+              <h2>Low Stock Alert</h2>
+              <button id="refreshBtn" class="small">Refresh</button>
+            </div>
+            <div id="lowStockList" class="list"></div>
+          </div>
+        </section>
+
+        <section id="sales" class="tab-panel">
+          <div class="section-card">
+            <h2>Add Daily Sale</h2>
+            <form id="salesForm" class="form-grid">
+              <input name="sale_date" type="date" required />
+              <input name="item_name" placeholder="Item / plate sold" required />
+              <input name="quantity" type="number" step="0.01" placeholder="Quantity sold" required />
+              <input name="selling_price" type="number" step="0.01" placeholder="Selling price" required />
+              <select name="payment_mode" required>
+                <option value="">Payment mode</option>
+                <option>Cash</option>
+                <option>UPI</option>
+                <option>Card</option>
+                <option>Swiggy</option>
+                <option>Zomato</option>
+                <option>Other</option>
+              </select>
+              <button type="submit">Save Sale</button>
+            </form>
+          </div>
+          <div class="section-card">
+            <h2>Recent Sales</h2>
+            <div id="salesList" class="list"></div>
+          </div>
+        </section>
+
+        <section id="expenses" class="tab-panel">
+          <div class="section-card">
+            <h2>Add Expense / Purchase</h2>
+            <form id="expensesForm" class="form-grid">
+              <input name="expense_date" type="date" required />
+              <input name="category" placeholder="Category e.g. Vegetables" required />
+              <input name="item_name" placeholder="Item purchased" required />
+              <input name="quantity" type="number" step="0.01" placeholder="Quantity" />
+              <input name="total_price" type="number" step="0.01" placeholder="Total price" required />
+              <input name="supplier" placeholder="Supplier / vendor" />
+              <input name="notes" placeholder="Notes" />
+              <button type="submit">Save Expense</button>
+            </form>
+          </div>
+          <div class="section-card">
+            <h2>Recent Expenses</h2>
+            <div id="expensesList" class="list"></div>
+          </div>
+        </section>
+
+        <section id="inventory" class="tab-panel">
+          <div class="section-card">
+            <h2>Add / Update Inventory</h2>
+            <form id="inventoryForm" class="form-grid">
+              <input name="raw_material_name" placeholder="Raw material name" required />
+              <input name="unit" placeholder="Unit e.g. kg, litre, pcs" required />
+              <input name="opening_stock" type="number" step="0.01" placeholder="Opening stock" required />
+              <input name="stock_added" type="number" step="0.01" placeholder="Stock added" required />
+              <input name="stock_used" type="number" step="0.01" placeholder="Stock used" required />
+              <input name="minimum_stock_level" type="number" step="0.01" placeholder="Minimum stock level" required />
+              <input name="purchase_price" type="number" step="0.01" placeholder="Purchase price" />
+              <button type="submit">Save Inventory</button>
+            </form>
+          </div>
+          <div class="section-card">
+            <h2>Inventory Summary</h2>
+            <div id="inventoryList" class="list"></div>
+          </div>
+        </section>
+
+        <section id="reports" class="tab-panel">
+          <div class="section-card">
+            <h2>Reports</h2>
+            <div class="report-grid">
+              <div>
+                <span>This Month Sales</span>
+                <strong id="monthSales">₹0</strong>
+              </div>
+              <div>
+                <span>This Month Expenses</span>
+                <strong id="monthExpenses">₹0</strong>
+              </div>
+              <div>
+                <span>This Month Profit</span>
+                <strong id="monthProfit">₹0</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    window.APP_CONFIG = {
+      SUPABASE_URL: "https://jtycpytipcqlghvqtgvm.supabase.co",
+      SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0eWNweXRpcGNxbGdodnF0Z3ZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1OTgzODcsImV4cCI6MjA5OTE3NDM4N30.TIHtwc3Jv5D9wyLH9S6fDPTZLckdQm3HYYXHlkeVJY8"
+    };
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
